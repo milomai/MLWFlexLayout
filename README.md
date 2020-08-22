@@ -5,8 +5,14 @@
 [![License](https://img.shields.io/cocoapods/l/MLWFlexLayout.svg?style=flat)](https://cocoapods.org/pods/MLWFlexLayout)
 [![Platform](https://img.shields.io/cocoapods/p/MLWFlexLayout.svg?style=flat)](https://cocoapods.org/pods/MLWFlexLayout)
 
-A flex layout system with declarative UI for iOS. Just like Flutter
+A flex layout system with declarative UI for iOS. Just like Flutter. No, it's no hod reload support
 
+## TODOS
+
+- [ ] Dynamic change size
+- [ ] Scrollview as root
+
+## Usage
 ```swift
 let flex = Column(crossAlignment: .center, [
     Spacer(100),
