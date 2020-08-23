@@ -1,11 +1,13 @@
-# Milo's Wheel: Flex layout
+# Milo's Wheel: Flex layout 
 
 [![CI Status](https://img.shields.io/travis/milomai/MLWFlexLayout.svg?style=flat)](https://travis-ci.org/milomai/MLWFlexLayout)
 [![Version](https://img.shields.io/cocoapods/v/MLWFlexLayout.svg?style=flat)](https://cocoapods.org/pods/MLWFlexLayout)
 [![License](https://img.shields.io/cocoapods/l/MLWFlexLayout.svg?style=flat)](https://cocoapods.org/pods/MLWFlexLayout)
 [![Platform](https://img.shields.io/cocoapods/p/MLWFlexLayout.svg?style=flat)](https://cocoapods.org/pods/MLWFlexLayout)
 
-A flex layout system with declarative UI for iOS. Just like Flutter. No, it's no hod reload support
+A flex layout system with declarative UI for iOS. Just like Flutter & SwiftUI. No hod reload support
+
+一个 iOS 上的声明式 Flex 布局框架。适用于无法使用 SwiftUI，又想使用声明式 UI 的项目。目前还很简单，暂时只支持静态页面。
 
 ## TODOS
 
@@ -84,12 +86,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Installation
 
-MLWFlexLayout is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod 'MLWFlexLayout'
-```
+copy 'Flex.swift' & 'Helper.swift' to your project
 
 ## Author
 
