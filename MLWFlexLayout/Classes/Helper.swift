@@ -61,7 +61,11 @@ extension NSLayoutConstraint {
     }
     
     func setPriority(_ p: Float) -> NSLayoutConstraint {
-        priority = UILayoutPriority(rawValue: p)
+        setPriority(UILayoutPriority(rawValue: p))
+    }
+    
+    func setPriority(_ p: UILayoutPriority) -> NSLayoutConstraint {
+        priority = p
         return self
     }
 }

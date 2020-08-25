@@ -44,15 +44,15 @@ public class Flex: UILayoutGuide {
     }
     
     fileprivate var children: [Flex] = []
-    fileprivate var constrains: [NSLayoutConstraint] = []
+    fileprivate var constraints: [NSLayoutConstraint] = []
     fileprivate var widthConstraint: NSLayoutConstraint? {
         get {
-            constrains.first { $0.identifier == WidthConstraintId }
+            constraints.first { $0.identifier == WidthConstraintId }
         }
     }
     fileprivate var heightConstraint: NSLayoutConstraint? {
         get {
-            constrains.first { $0.identifier == HeightConstraintId }
+            constraints.first { $0.identifier == HeightConstraintId }
         }
     }
     fileprivate weak var flexObserver: FlexObserverProtocol?
@@ -82,30 +82,30 @@ public class Flex: UILayoutGuide {
         super.init()
         
         if width != 0 {
-            constrains.append(widthAnchor.constraint(equalToConstant: width).setIdentifider(WidthConstraintId))
+            constraints.append(widthAnchor.constraint(equalToConstant: width).setIdentifider(WidthConstraintId))
         }
         if height != 0 {
-            constrains.append(heightAnchor.constraint(equalToConstant: height).setIdentifider(HeightConstraintId))
+            constraints.append(heightAnchor.constraint(equalToConstant: height).setIdentifider(HeightConstraintId))
         }
         
         view?.translatesAutoresizingMaskIntoConstraints = false
         self.view = view
         if let _view = view {
             if flex == 0 && width == 0 && height == 0 {
-                constrains.append(contentsOf: [
+                constraints.append(contentsOf: [
                     _view.topAnchor.constraint(equalTo: topAnchor),
                     _view.leftAnchor.constraint(equalTo: leftAnchor),
                     heightAnchor.constraint(equalTo: _view.heightAnchor).setIdentifider(HeightConstraintId),
                     widthAnchor.constraint(equalTo: _view.widthAnchor).setIdentifider(WidthConstraintId)
                 ])
             } else {
-                constrains.append(contentsOf: view!.fill(self))
+                constraints.append(contentsOf: view!.fill(self))
             }
         }
         
         if child != nil {
             children.append(child!)
-            constrains.append(contentsOf:child!.fill(self))
+            constraints.append(contentsOf:child!.fill(self))
         }
     }
     
@@ -129,7 +129,7 @@ public class Flex: UILayoutGuide {
     }
     
     fileprivate func activeConstrains() {
-        NSLayoutConstraint.activate(constrains)
+        NSLayoutConstraint.activate(constraints)
         children.forEach {$0.activeConstrains()}
     }
     
@@ -255,12 +255,12 @@ public class DirectionFlexLayout: Flex, FlexObserverProtocol {
         func installCrossAlignmentConstraints(_ child: Flex) {
             switch crossAlignment {
             case .stretch:
-                constrains.append(contentsOf: [
+                constraints.append(contentsOf: [
                     child.anchorsFor(direction).cross.space.constraint(equalTo: anchorsFor(direction).cross.space).setPriority(999),
                     child.anchorsFor(direction).cross.start.constraint(equalTo: anchorsFor(direction).cross.start)
                 ])
             case .center:
-                constrains.append(child.anchorsFor(direction).cross.center.constraint(equalTo: anchorsFor(direction).cross.center).setPriority(999))
+                constraints.append(child.anchorsFor(direction).cross.center.constraint(equalTo: anchorsFor(direction).cross.center).setPriority(999))
             }
         }
         
@@ -286,10 +286,10 @@ public class DirectionFlexLayout: Flex, FlexObserverProtocol {
             installCrossAlignmentConstraints(child)
             
             if index == 0 {
-                constrains.append(child.anchorsFor(direction).main.start.constraint(equalTo: anchorsFor(direction).main.start))
+                constraints.append(child.anchorsFor(direction).main.start.constraint(equalTo: anchorsFor(direction).main.start))
             } else {
                 let previous = self.children[index-1]
-                constrains.append(child.anchorsFor(direction).main.start.constraint(equalTo: previous.anchorsFor(direction).main.end))
+                constraints.append(child.anchorsFor(direction).main.start.constraint(equalTo: previous.anchorsFor(direction).main.end))
             }
         }
         childrenFlexChanged()
@@ -299,11 +299,11 @@ public class DirectionFlexLayout: Flex, FlexObserverProtocol {
             let end = spaces.last!
             switch mainAlignment {
             case .start:
-                constrains.append(contentsOf: [
+                constraints.append(contentsOf: [
                     end.anchorsFor(direction).main.end.constraint(equalTo: anchorsFor(direction).main.end).setPriority(900)
                 ])
             case .center:
-                constrains.append(contentsOf: [
+                constraints.append(contentsOf: [
                     start.anchorsFor(direction).main.space.constraint(equalTo: end.anchorsFor(direction).main.space).setPriority(900)
                 ])
             case .spaceBetween:
@@ -317,7 +317,7 @@ public class DirectionFlexLayout: Flex, FlexObserverProtocol {
                     }
                 }
                 consts.forEach {$0.priority = UILayoutPriority(rawValue: 900)}
-                constrains.append(contentsOf: consts)
+                constraints.append(contentsOf: consts)
             }
         }
         
@@ -329,13 +329,13 @@ public class DirectionFlexLayout: Flex, FlexObserverProtocol {
         let layout = anchorsFor(direction).main.end.constraint(equalTo: children.last!.anchorsFor(direction).main.end)
         layout.identifier = "\(Self.self).end"
         layout.priority = UILayoutPriority(rawValue: 888)
-        constrains.append(layout)
+        constraints.append(layout)
     }
     
     // to support dynamic flex, WIP
     func childrenFlexChanged() {
         // remove old
-        constrains.removeAll { flexConstraints.contains($0) }
+        constraints.removeAll { flexConstraints.contains($0) }
         flexConstraints.forEach {
             owningView?.removeConstraint($0)
         }
@@ -353,7 +353,7 @@ public class DirectionFlexLayout: Flex, FlexObserverProtocol {
             }
         }
         
-        constrains.append(contentsOf: flexConstraints)
+        constraints.append(contentsOf: flexConstraints)
         if owningView != nil {
             activeConstrains()
         }
