@@ -15,6 +15,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        var otherLoginWaysLayout: Row?
+        var blueButton: Flex?
+        var pinkButton: Flex?
+        
         let flex = Column(crossAlignment: .center, [
             Spacer(100),
             Flex(view: {
@@ -47,22 +51,22 @@ class ViewController: UIViewController {
                     return label
                 } ()),
                 Spacer(10),
-                Row(width: 260, mainAlignment: .spaceBetween, [
-                    Flex(width: 44, height: 44, view: {
+                Row(width: 260, height: 0, mainAlignment: .spaceBetween, ref:&otherLoginWaysLayout, [
+                    Flex(1, view: {
                         let button = UIButton(type: .system)
                         button.backgroundColor = .cyan
                         return button
                     } ()),
-                    Flex(width: 44, height: 44, view: {
+                    Flex(1, view: {
                         let button = UIButton(type: .system)
                         button.backgroundColor = .systemBlue
                         return button
-                    } ()),
-                    Flex(width: 44, height: 44, view: {
+                    } (), ref: &blueButton),
+                    Flex(width: 0, view: {
                         let button = UIButton(type: .system)
                         button.backgroundColor = .systemPink
                         return button
-                    } ()),
+                    } (), ref: &pinkButton),
                 ])
             ]),
             Flex(1),
@@ -78,6 +82,22 @@ class ViewController: UIViewController {
         
         // draw the layout to debug
         flex.debugDraw()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.view.animateUpdateConstraints(duration: 0.3) {
+                otherLoginWaysLayout?.height = 44
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            self.view.animateUpdateConstraints(duration: 0.3) {
+                blueButton?.flex = 2
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            self.view.animateUpdateConstraints(duration: 0.3) {
+                pinkButton?.width = 44
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {

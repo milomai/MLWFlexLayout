@@ -44,7 +44,7 @@ extension UILayoutGuideProtocol {
 
 extension UILayoutGuide: UILayoutGuideProtocol {}
 extension UIView: UILayoutGuideProtocol {}
-extension UIView {
+public extension UIView {
     func animateUpdateConstraints(duration: TimeInterval, animation: @escaping ()->Void) {
         animation()
         setNeedsUpdateConstraints()

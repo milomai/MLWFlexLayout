@@ -24,13 +24,25 @@ public class Flex: UILayoutGuide {
     
     /// the view in this layout
     public var view: UIView?
-    public var width: CGFloat {
-        get { widthConstraint?.constant ?? 0}
-        set { widthConstraint?.constant = newValue }
+    public var width: CGFloat? {
+        get { widthConstraint.constant}
+        set {
+            if newValue == nil {
+                widthConstraint.isActive = false
+                return
+            }
+            widthConstraint.constant = newValue!
+        }
     }
-    public var height: CGFloat {
-        get { heightConstraint?.constant ?? 0}
-        set { heightConstraint?.constant = newValue }
+    public var height: CGFloat? {
+        get { heightConstraint.constant}
+        set {
+            if newValue == nil {
+                heightConstraint.isActive = false
+                return
+            }
+            heightConstraint.constant = newValue!
+        }
     }
     
     public var isActive: Bool = false {
@@ -45,16 +57,8 @@ public class Flex: UILayoutGuide {
     
     fileprivate var children: [Flex] = []
     fileprivate var constraints: [NSLayoutConstraint] = []
-    fileprivate var widthConstraint: NSLayoutConstraint? {
-        get {
-            constraints.first { $0.identifier == WidthConstraintId }
-        }
-    }
-    fileprivate var heightConstraint: NSLayoutConstraint? {
-        get {
-            constraints.first { $0.identifier == HeightConstraintId }
-        }
-    }
+    fileprivate lazy var widthConstraint: NSLayoutConstraint = widthAnchor.constraint(equalToConstant: 0).setPriority(999)
+    fileprivate lazy var heightConstraint: NSLayoutConstraint = heightAnchor.constraint(equalToConstant: 0).setPriority(999)
     fileprivate weak var flexObserver: FlexObserverProtocol?
     fileprivate lazy var zeroConstraints: [NSLayoutConstraint] = [
         widthAnchor.constraint(equalToConstant: 0),
@@ -77,26 +81,32 @@ public class Flex: UILayoutGuide {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public init(_ flex: CGFloat = 0, width: CGFloat = 0, height: CGFloat = 0, view: UIView? = nil, child: Flex? = nil) {
+    public init(_ flex: CGFloat = 0,
+                width: CGFloat? = nil,
+                height: CGFloat? = nil,
+                view: UIView? = nil,
+                child: Flex? = nil) {
         self.flex = flex
         super.init()
         
-        if width != 0 {
-            constraints.append(widthAnchor.constraint(equalToConstant: width).setIdentifider(WidthConstraintId))
+        if width != nil {
+            widthConstraint.constant = width!
+            constraints.append(widthConstraint)
         }
-        if height != 0 {
-            constraints.append(heightAnchor.constraint(equalToConstant: height).setIdentifider(HeightConstraintId))
+        if height != nil {
+            heightConstraint.constant = height!
+            constraints.append(heightConstraint)
         }
         
         view?.translatesAutoresizingMaskIntoConstraints = false
         self.view = view
         if let _view = view {
-            if flex == 0 && width == 0 && height == 0 {
+            if flex == 0 && width == nil && height == nil {
                 constraints.append(contentsOf: [
                     _view.topAnchor.constraint(equalTo: topAnchor),
                     _view.leftAnchor.constraint(equalTo: leftAnchor),
-                    heightAnchor.constraint(equalTo: _view.heightAnchor).setIdentifider(HeightConstraintId),
-                    widthAnchor.constraint(equalTo: _view.widthAnchor).setIdentifider(WidthConstraintId)
+                    heightAnchor.constraint(equalTo: _view.heightAnchor),
+                    widthAnchor.constraint(equalTo: _view.widthAnchor)
                 ])
             } else {
                 constraints.append(contentsOf: view!.fill(self))
@@ -117,8 +127,17 @@ public class Flex: UILayoutGuide {
     ///   - view: the view in this layout, if both flex, width & height is zero, will use view's intrinsicContentSize as layout size, otherwise the view will fill the layout size
     ///   - ref: refrence to this layout
     ///   - child: child layout
-    public convenience init(_ flex: CGFloat = 0, width: CGFloat = 0, height: CGFloat = 0, view: UIView? = nil, ref: inout Flex?, child: Flex? = nil) {
-        self.init(flex, width:width, height:height, view:view, child:child)
+    public convenience init(_ flex: CGFloat = 0,
+                            width: CGFloat? = nil,
+                            height: CGFloat? = nil,
+                            view: UIView? = nil,
+                            ref: inout Flex?,
+                            child: Flex? = nil) {
+        self.init(flex,
+                  width: width,
+                  height: height,
+                  view: view,
+                  child: child)
         ref = self
     }
     
@@ -225,8 +244,8 @@ public class DirectionFlexLayout: Flex, FlexObserverProtocol {
     
     public convenience init(direction: Direction,
                      flex: CGFloat = 0,
-                     width: CGFloat = 0,
-                     height: CGFloat = 0,
+                     width: CGFloat? = nil,
+                     height: CGFloat? = nil,
                      mainAlignment:MainAxisAlignment = .start,
                      crossAlignment:crossAxisAlignment = .stretch,
                      ref: inout DirectionFlexLayout?,
@@ -244,8 +263,8 @@ public class DirectionFlexLayout: Flex, FlexObserverProtocol {
     
     public init(direction: Direction,
          flex: CGFloat = 0,
-         width: CGFloat = 0,
-         height: CGFloat = 0,
+         width: CGFloat? = nil,
+         height: CGFloat? = nil,
          mainAlignment:MainAxisAlignment = .start,
          crossAlignment:crossAxisAlignment = .stretch,
          children: [Flex] = []) {
@@ -366,8 +385,8 @@ public class Row: DirectionFlexLayout {
     }
     
     public init(flex: CGFloat = 0,
-         width: CGFloat = 0,
-         height: CGFloat = 0,
+         width: CGFloat? = nil,
+         height: CGFloat? = nil,
          mainAlignment:MainAxisAlignment = .start,
          crossAlignment:crossAxisAlignment = .stretch,
          _ children: [Flex] = []) {
@@ -381,8 +400,8 @@ public class Row: DirectionFlexLayout {
     }
     
     public convenience init(flex: CGFloat = 0,
-                     width: CGFloat = 0,
-                     height: CGFloat = 0,
+                     width: CGFloat? = nil,
+                     height: CGFloat? = nil,
                      mainAlignment:MainAxisAlignment = .start,
                      crossAlignment:crossAxisAlignment = .stretch,
                      ref: inout Row?,
@@ -404,8 +423,8 @@ public class Column: DirectionFlexLayout {
     }
     
     public init(flex: CGFloat = 0,
-         width: CGFloat = 0,
-         height: CGFloat = 0,
+         width: CGFloat? = nil,
+         height: CGFloat? = nil,
          mainAlignment:MainAxisAlignment = .start,
          crossAlignment:crossAxisAlignment = .stretch,
          _ children: [Flex] = []) {
@@ -419,8 +438,8 @@ public class Column: DirectionFlexLayout {
     }
     
     public convenience init(flex: CGFloat = 0,
-                     width: CGFloat = 0,
-                     height: CGFloat = 0,
+                     width: CGFloat? = nil,
+                     height: CGFloat? = nil,
                      mainAlignment:MainAxisAlignment = .start,
                      crossAlignment:crossAxisAlignment = .stretch,
                      ref: inout Column?,
