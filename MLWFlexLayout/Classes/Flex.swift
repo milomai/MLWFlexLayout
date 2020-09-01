@@ -9,6 +9,7 @@
 import UIKit
 
 protocol FlexObserverProtocol : class {
+    var mainAxis: DirectionFlexLayout.Direction {get}
     func childrenFlexChanged()
 }
 
@@ -351,7 +352,9 @@ public class DirectionFlexLayout: Flex, FlexObserverProtocol {
         constraints.append(layout)
     }
     
-    // to support dynamic flex, WIP
+    var mainAxis: Direction {direction}
+    
+    // to support dynamic flex
     func childrenFlexChanged() {
         // remove old
         constraints.removeAll { flexConstraints.contains($0) }

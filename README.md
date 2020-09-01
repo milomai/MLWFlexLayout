@@ -7,11 +7,11 @@
 
 A flex layout system with declarative UI for iOS. Just like Flutter & SwiftUI. No hod reload support
 
-一个 iOS 上的声明式 Flex 布局框架。适用于无法使用 SwiftUI，又想使用声明式 UI 的项目。目前还很简单，暂时只支持静态页面。
+一个 iOS 上的声明式 Flex 布局框架。适用于无法使用 SwiftUI，又想使用声明式 UI 的项目。
 
 ## TODOS
 
-- [ ] Dynamic change size
+- [x] Dynamic change size
 - [ ] Scrollview as root
 
 ## Usage
@@ -76,6 +76,25 @@ let flex = Column(crossAlignment: .center, [
 ])
 
 flex.setRootView(view)
+```
+
+### Change Size At Runtime 动态改变大小
+
+Limit: can not set width or height to a layout which have a flex value
+限制：使用 flex 设置大小的 layout 不能在之后改成使用固定大小。
+
+```swift
+var layoutRef: Flex?
+
+Column([
+    Flex(width :0, height:44 ref: &layoutRef),
+])
+
+DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+    self.view.animateUpdateConstraints(duration: 0.3) {
+        layoutRef?.width = 44
+    }
+}
 ```
 
 ## Example
