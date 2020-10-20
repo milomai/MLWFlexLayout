@@ -14,8 +14,6 @@ protocol FlexObserverProtocol : class {
 }
 
 public class Flex: UILayoutGuide {
-    fileprivate var WidthConstraintId = "Flex-Width"
-    fileprivate var HeightConstraintId = "Flex-Height"
     
     public var flex: CGFloat {
         didSet {
@@ -465,23 +463,5 @@ public class Spacer: Flex {
     
     public init(_ space: CGFloat) {
         super.init(width: space, height: space)
-    }
-}
-
-public class Center: Flex {
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
-    public init(view: UIView? = nil, child: Flex? = nil) {
-        super.init(1, child: Column([
-            Flex(1),
-            Row([
-                Flex(1),
-                Flex(view: view, child: child),
-                Flex(1),
-            ]),
-            Flex(1),
-        ]))
     }
 }

@@ -51,18 +51,18 @@ class ViewController: UIViewController {
                     return label
                 } ()),
                 Spacer(10),
-                Row(width: 260, height: 0, mainAlignment: .spaceBetween, ref:&otherLoginWaysLayout, [
-                    Flex(1, view: {
+                Row(width: 260, height: 44, mainAlignment: .spaceBetween, ref:&otherLoginWaysLayout, [
+                    Flex(width: 44, view: {
                         let button = UIButton(type: .system)
                         button.backgroundColor = .cyan
                         return button
                     } ()),
-                    Flex(1, view: {
+                    Flex(width: 44, view: {
                         let button = UIButton(type: .system)
                         button.backgroundColor = .systemBlue
                         return button
                     } (), ref: &blueButton),
-                    Flex(width: 0, view: {
+                    Flex(width: 44, view: {
                         let button = UIButton(type: .system)
                         button.backgroundColor = .systemPink
                         return button
@@ -82,22 +82,6 @@ class ViewController: UIViewController {
         
         // draw the layout to debug
         flex.debugDraw()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.view.animateUpdateConstraints(duration: 0.3) {
-                otherLoginWaysLayout?.height = 44
-            }
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-            self.view.animateUpdateConstraints(duration: 0.3) {
-                blueButton?.flex = 2
-            }
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
-            self.view.animateUpdateConstraints(duration: 0.3) {
-                pinkButton?.width = 44
-            }
-        }
     }
 
     override func didReceiveMemoryWarning() {
