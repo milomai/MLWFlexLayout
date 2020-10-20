@@ -9,6 +9,9 @@ A flex layout system with declarative UI for iOS. Just like Flutter & SwiftUI. N
 
 一个 iOS 上的声明式 Flex 布局框架。适用于无法使用 SwiftUI，又想使用声明式 UI 的项目。
 
+## ScreenShot
+![ScreenShot](ScreenShot.png)
+
 ## TODOS
 
 - [x] Dynamic change size
@@ -81,6 +84,7 @@ flex.setRootView(view)
 ### Change Size At Runtime 动态改变大小
 
 Limit: can not set width or height to a layout which have a flex value
+
 限制：使用 flex 设置大小的 layout 不能在之后改成使用固定大小。
 
 ```swift
